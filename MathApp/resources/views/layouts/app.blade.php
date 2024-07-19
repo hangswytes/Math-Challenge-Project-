@@ -22,14 +22,18 @@
 
         @if (auth()->check() && request()->route()->getName() != "")
             @include('layouts.navbars.sidebar')
-            @include('pages/sidebarstyle') <!-- Ensure you have this file or modify accordingly -->
+            @include('pages.sidebarstyle') <!-- Ensure you have this file or modify accordingly -->
         @endif
 
         <div class="@if (auth()->check() && request()->route()->getName() != "") main-panel @endif">
             @include('layouts.navbars.navbar')
+
             <div class="content">
-                @yield('content') <!-- Content of the page -->
+                <div class="container-fluid">
+                    @yield('content') <!-- Content of the page -->
+                </div>
             </div>
+
             @include('layouts.footer.nav') <!-- Ensure this footer exists or modify as needed -->
         </div>
     </div>

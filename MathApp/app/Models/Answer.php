@@ -11,11 +11,11 @@ class Answer extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'ans_id'; // Set the primary key
-    protected $fillable = ['question_id', 'answer', 'marks']; // Mass assignable attributes
+    protected $fillable = ['id', 'answer', 'marks', 'question_id'];
 
     public function question()
     {
-        return $this->belongsTo(Question::class, 'question_id', 'qn_id'); // Define inverse relationship
+        return $this->belongsTo(Question::class);
     }
 }
+

@@ -2,59 +2,66 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\School;
-use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Http\Request;
 
 class SchoolController extends Controller
 {
-    // Show the upload form
-   // In your controller method
-// In your controller method
-public function showUploadForm()
-{
-    return view('schools.upload', [
-        'activePage' => 'schools',
-        'activeButton' => 'laravel',
-        'navName' => 'Upload' // Define and pass the $navName variable
-    ]);
-}
-
-    
-
-    // Handle file upload and process
-    public function upload(Request $request)
+    /**
+     * Display a listing of the schools.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {
-        // Validate the file
+        $schools = School::all();
+        $activePage = 'schools';
+        $activeButton = 'schools';
+        $navName = 'Schools';
+        return view('pages.schools', compact('schools', 'activePage', 'activeButton', 'navName'));
+    }
+
+    /**
+     * Show the form for creating a new school.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $activePage = 'create-school';
+        $activeButton = 'schools';
+        $navName = 'Create School';
+        return view('schools.create', compact('activePage', 'activeButton', 'navName'));
+    }
+
+    /**
+     * Store a newly created school in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
         $request->validate([
-            'file' => 'required|mimes:xlsx,csv|max:2048',
+            'school_id' => 'required|unique:schools',
+            'school_regno' => 'required',
+            'district' => 'required',
+            'name' => 'required',
+            'representative_name' => 'required',
+            'representative_email' => 'required|email',
         ]);
 
-        // Load the file
-        $file = $request->file('file');
-        $spreadsheet = IOFactory::load($file->getRealPath());
-        $sheet = $spreadsheet->getActiveSheet();
-        $rows = $sheet->toArray();
+        $school = new School([
+            'school_id' => $request->get('school_id'),
+            'school_regno' => $request->get('school_regno'),
+            'district' => $request->get('district'),
+            'name' => $request->get('name'),
+            'representative_name' => $request->get('representative_name'),
+            'representative_email' => $request->get('representative_email'),
+        ]);
 
-        // Assuming the first row contains headers
-        $header = array_shift($rows);
+        $school->save();
 
-        foreach ($rows as $row) {
-            $data = array_combine($header, $row);
-
-            // Insert or update the school record
-            School::updateOrCreate(
-                ['school_id' => $data['school_id']], // Assuming school_id is unique
-                [
-                    'school_regno' => $data['school_regno'],
-                    'district' => $data['district'],
-                    'name' => $data['name'],
-                    'representative_name' => $data['representative_name'],
-                    'representative_email' => $data['representative_email'],
-                ]
-            );
-        }
-
-        return redirect()->route('schools.upload')->with('success', 'Schools imported successfully.');
+        return redirect('/schools')->with('success', 'School has been added');
     }
 }

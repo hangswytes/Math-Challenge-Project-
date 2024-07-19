@@ -2,27 +2,41 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SchoolController;
-use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\ChallengeController;
+use App\Http\Controllers\TableController;
+
+Route::get('/tables', [TableController::class, 'index'])->name('tables.index');
+
+// Routes for creating best schools, worst schools, and best participants
+Route::get('/tables/create', [TableController::class, 'create'])->name('tables.create');
+Route::post('/tables/store_best_school', [TableController::class, 'storeBestSchool'])->name('tables.store_best_school');
+Route::post('/tables/store_worst_school', [TableController::class, 'storeWorstSchool'])->name('tables.store_worst_school');
+Route::post('/tables/store_best_participant', [TableController::class, 'storeBestParticipant'])->name('tables.store_best_participant');
 
 
-Route::get('questions/upload', [QuestionController::class, 'index'])->name('questions.index');
-Route::post('questions/upload', [QuestionController::class, 'upload'])->name('questions.upload');
 
 
-
-
-
-
-
+Route::get('/challenges', [ChallengeController::class, 'index'])->name('challenges.index');
 Route::get('/challenges/create', [ChallengeController::class, 'create'])->name('challenges.create');
 Route::post('/challenges', [ChallengeController::class, 'store'])->name('challenges.store');
-Route::get('/challenges/{challenge}/edit', [ChallengeController::class, 'edit'])->name('challenges.edit');
-Route::put('/challenges/{challenge}', [ChallengeController::class, 'update'])->name('challenges.update');
 
 
-Route::get('schools/upload', [SchoolController::class, 'showUploadForm'])->name('schools.upload');
-Route::post('schools/upload', [SchoolController::class, 'upload']);
+
+Route::get('questions/upload', [QuestionController::class, 'showUploadForm'])->name('questions.upload');
+Route::post('questions/upload', [QuestionController::class, 'upload'])->name('questions.upload.post');
+
+
+
+Route::get('/schools', [SchoolController::class, 'index'])->name('schools.index');
+Route::get('/schools/create', [SchoolController::class, 'create'])->name('schools.create');
+Route::post('/schools', [SchoolController::class, 'store'])->name('schools.store');
+
+
+
+
+
+
 
 
 /*

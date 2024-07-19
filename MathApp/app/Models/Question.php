@@ -11,11 +11,10 @@ class Question extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'qn_id'; // Set the primary key
-    protected $fillable = ['qn']; // Mass assignable attributes
+    protected $fillable = ['id', 'question'];
 
     public function answers()
     {
-        return $this->hasMany(Answer::class, 'question_id', 'qn_id'); // Define one-to-many relationship
+        return $this->hasMany(Answer::class);
     }
 }
